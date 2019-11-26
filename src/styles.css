@@ -1,1 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
+
+.table-default>tbody>tr>td {
+  vertical-align: middle;
+}
+
+@media (min-width: 768px) {
+  #content-wrapper {
+    padding-left: 14rem !important;
+  }
+}
+
+#content-wrapper {
+  padding-left: 6.5rem;
+}
