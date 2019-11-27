@@ -5,19 +5,10 @@
   <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" style="position: fixed;"
     id="accordionSidebar">
 
-    <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-      <div class="sidebar-brand-icon rotate-n-15">
-        <i class="fas fa-table"></i>
-      </div>
-      <div class="sidebar-brand-text mx-3">Scheduler</div>
-    </a>
-
-    <hr class="sidebar-divider my-0">
-    <li class="nav-item">
-      <a class="nav-link" href="/">
+    <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+      <a class="nav-link" href="#" routerLink="/">
         <i class="fas fa-fw fa-cogs"></i>
-        <span>Engine</span></a>
+        <span>Generator</span></a>
     </li>
 
     <!-- Divider -->
@@ -28,8 +19,8 @@
       Data
     </div>
 
-    <li class="nav-item">
-      <a class="nav-link" href="charts.html">
+    <li class="nav-item" routerLinkActive="active">
+      <a class="nav-link" href="#" routerLink="/classes">
         <i class="fas fa-fw fa-users"></i>
         <span>Kelas</span></a>
     </li>
@@ -42,22 +33,35 @@
     </li>
 
     <li class="nav-item">
-      <a class="nav-link" href="charts.html">
+      <a class="nav-link" href="#">
         <i class="fas fa-fw fa-book"></i>
         <span>Pengampuh</span></a>
     </li>
 
-    <li class="nav-item">
-      <a class="nav-link" href="charts.html">
+    <li class="nav-item" routerLinkActive="active">
+      <a class="nav-link" href="#" routerLink="/classroom">
         <i class="fas fa-fw fa-building"></i>
         <span>Ruangan</span></a>
     </li>
 
     <li class="nav-item">
-      <a class="nav-link" href="charts.html">
+      <a class="nav-link" href="#">
         <i class="fas fa-fw fa-clock"></i>
         <span>Slot Waktu</span></a>
     </li>
+
+    <hr class="sidebar-divider">
+
+    <li class="nav-item" routerLinkActive="active">
+      <a class="nav-link" href="#" routerLink="/about">
+        <i class="fas fa-fw fa-info"></i>
+        <span>Tentang</span></a>
+    </li>
+    <!-- <li class="nav-item" routerLinkActive="active">
+      <a class="nav-link" href="#" routerLink="/about">
+        <i class="fas fa-fw fa-comment"></i>
+        <span>Kritik & Saran</span></a>
+    </li> -->
   </ul>
   <!-- End of Sidebar -->
 
@@ -79,7 +83,7 @@
     <!-- End of Main Content -->
 
     <!-- Footer -->
-    <footer class="sticky-footer bg-white py-2">
+    <footer class="sticky-footer bg-white py-3">
       <div class="container my-auto">
         <div class="copyright text-right my-auto">
           <span>SensasiApps | 2019</span>
