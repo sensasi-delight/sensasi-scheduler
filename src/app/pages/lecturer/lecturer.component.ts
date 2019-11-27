@@ -1,19 +1,20 @@
 import { Component, OnInit } from '@angular/core';
+import { Data } from "../../classes/data";
 
 @Component({
   selector: 'app-lecturer',
   templateUrl: './lecturer.component.html',
   styleUrls: ['./lecturer.component.css']
 })
+
 export class LecturerComponent implements OnInit {
   model: any;
   storeMode: string;
-  lecturers = [];
+  lecturers = Data.getLecturers();
   workingIndex;
 
   constructor() {
     this.resetModel();
-    this.lecturers = localStorage.getItem('lecturers') == null || localStorage.getItem('lecturers') == '' ? [] : JSON.parse(localStorage.getItem('lecturers'));
   }
 
   ngOnInit() {
@@ -62,14 +63,14 @@ export class LecturerComponent implements OnInit {
 
       $('#lecturerFormModal').modal('hide');
       formData.resetForm();
-      this.lecturersToLocalStorage();
+      Data.toLocalStorage();
     }
   }
 
   deleteLecturer(): void {
     $('#lecturerDeleteModal').modal('hide');
     this.lecturers.splice(this.workingIndex, 1);
-    this.lecturersToLocalStorage();
+    Data.toLocalStorage()
   }
 
   private resetModel():void {
@@ -88,9 +89,4 @@ export class LecturerComponent implements OnInit {
       }
     }
   }
-
-  private lecturersToLocalStorage(): void {
-    localStorage.setItem('lecturers', JSON.stringify(this.lecturers));
-  }
-
 }
