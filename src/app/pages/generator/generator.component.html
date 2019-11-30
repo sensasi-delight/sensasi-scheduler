@@ -1,1 +1,266 @@
-<p>generator works!</p>
+<!-- Page Heading -->
+<div class="d-flex align-items-center bd-highlight mb-4">
+  <div class="p-0 flex-grow-1 bd-highlight">
+    <h1 class="h3 mb-0 text-gray-800">Ringkasan</h1>
+  </div>
+  <div class="p-2 bd-highlight">
+    <input id="jsonfile" type="file" accept=".json" (change)="onChangeFile($event)" style="display: none;">
+    <button class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm" (click)="uploadBtnClick()">
+      <i class="fas fa-upload fa-sm text-white-50"></i> Unggah Data
+    </button>
+  </div>
+  <div class="p-2 bd-highlight">
+    <button (click)="downloadData()" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
+      <i class="fas fa-download fa-sm text-white-50"></i> Unduh Data
+    </button>
+  </div>
+  <div class="p-2 bd-highlight">
+    <button data-toggle="modal" data-target="#wipeDataModal"
+      class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm">
+      <i class="fas fa-trash fa-sm text-white-50"></i> Hapus Data
+    </button>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-8">
+    <div class="row">
+      <!-- lecturers overview -->
+      <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+          <div class="card-body">
+            <div class="row no-gutters align-items-center">
+              <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Dosen</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ data.lecturers.length }}</div>
+              </div>
+              <div class="col-auto">
+                <i class="fas fa-chalkboard-teacher fa-2x text-gray-300"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- classes overview -->
+      <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+          <div class="card-body">
+            <div class="row no-gutters align-items-center">
+              <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Kelas</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ data.classes.length }}</div>
+              </div>
+              <div class="col-auto">
+                <i class="fas fa-chalkboard-teacher fa-2x text-gray-300"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- classroom overview -->
+      <div class="col-xl-4 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+          <div class="card-body">
+            <div class="row no-gutters align-items-center">
+              <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Ruangan</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ data.rooms.length }}</div>
+              </div>
+              <div class="col-auto">
+                <i class="fas fa-building fa-2x text-gray-300"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Analisa</h6>
+      </div>
+      <div class="card-body">
+        <table class="table table-sm">
+          <tr style="border-top: hidden;">
+            <td>Kapasitas</td>
+            <td>389</td>
+          </tr>
+          <tr>
+            <td>Beban</td>
+            <td>12397</td>
+          </tr>
+          <tr>
+            <td>Kesalahan</td>
+            <td>
+              <ul>
+                <li>beban lebih besar dari kapasitas</li>
+                <li>beban dosen lebih besar dari jumlah slot</li>
+                <li>beban dosen lebih besar dari jumlah slot</li>
+              </ul>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<div class="d-sm-flex align-items-center justify-content-between my-4">
+  <h1 class="h3 mb-0 text-gray-800">Generator</h1>
+</div>
+
+<div class="row">
+  <div class="col-lg-8">
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Hasil</h6>
+      </div>
+      <div class="card-body">
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Program</h6>
+      </div>
+
+      <div class="card-body">
+        <!-- <div class="mb-4">
+          <div class="form-group">
+            <label>Jumlah Individu</label>
+            <input type="number" min="1" class="form-control input-sm" [disabled]="isRunning"/>
+          </div>
+
+          <div class="form-group">
+            <label>Tingkat Mutasi</label>
+            <input type="number" min="1" class="form-control input-lg" [disabled]="isRunning"/>
+          </div>
+
+          <div class="form-group">
+            <label>Tingkat Persilangan</label>
+            <input type="number" min="1" class="form-control input-lg" [disabled]="isRunning"/>
+          </div>
+
+          <div class="form-group">
+            <button class="btn btn-sm btn-secondary">Acak pengaturan</button>
+          </div>
+        </div> -->
+
+
+        <table class="table table-default table-sm">
+          <tr style="border-top: hidden;">
+            <td>Populasi ke</td>
+            <td>{{ nPopulation }}</td>
+          </tr>
+          <tr>
+            <td>Generasi ke</td>
+            <td>{{ generation }}</td>
+          </tr>
+          <tr>
+            <td>Stagnan</td>
+            <td>{{ stagnant }}</td>
+          </tr>
+          <tr>
+            <td>Bentrok</td>
+            <td>{{ Individual == null ? '...' : Individual.getFitness() }}</td>
+          </tr>
+          <tr>
+            <td>Waktu</td>
+            <td>{{ timerDisp }}</td>
+          </tr>
+          <tr>
+            <td>status</td>
+            <td *ngIf="isRunning">
+              memproses <i class="fa fa-cog fa-spin"></i>
+            </td>
+            <td *ngIf="!isRunning">
+              berhenti
+            </td>
+          </tr>
+        </table>
+
+        <div style="display: flex;" class="align-items-center justify-content-between mb-4">
+
+          <button class="d-sm-inline-block btn btn-sm btn-primary shadow-sm btn-icon-split"
+            (click)="Individual == null ? start() : resume()" *ngIf="!isRunning">
+            <span class="icon text-white-50">
+              <i class="fas fa-play"></i>
+            </span>
+            <span class="text">{{ Individual == null ? 'Mulai Program' : 'Lanjutkan Proses' }}</span>
+          </button>
+
+          <button class="d-sm-inline-block btn btn-sm btn-warning shadow-sm btn-icon-split" (click)="reset()"
+            *ngIf="!isRunning && Individual != null">
+            <span class="icon text-white-50">
+              <i class="fas fa-undo"></i>
+            </span>
+            <span class="text">Mulai Ulang</span>
+          </button>
+
+          <button *ngIf="isRunning" class="d-sm-inline-block btn btn-sm btn-secondary shadow-sm btn-icon-split"
+            (click)="stop()">
+            <span class="icon text-white-50">
+              <i class="fas fa-pause"></i>
+            </span>
+            <span class="text">Berhenti</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="wipeDataModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitle">Apa anda yakin ingin menghapus semua data?</h5>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <!-- <h4><strong>Apa anda yakin ingin menghapus semua data?</strong></h4> -->
+        <p>pastikan anda mengunduh data terlebih dahulu sebelum menghapusnya untuk digunakan dikemudian hari</p>
+        <p class="text-danger">*data yang telah terhapus tidak dapat dikembalikan</p>
+      </div>
+      <div class="modal-footer">
+
+        <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Batal</button>
+        <button class="btn btn-danger btn-sm" type="button" (click)="wipeLocalData()">Hapus</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="replaceDataConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitle">Apa anda yakin ingin memuat data?</h5>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <!-- <h4><strong>Apa anda yakin ingin menghapus semua data?</strong></h4> -->
+        <p class="text-danger">*data baru yang akan dimuat akan menggantikan data yang terdapat pada aplikasi sekarang
+        </p>
+      </div>
+      <div class="modal-footer">
+
+        <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Batal</button>
+        <button class="btn btn-danger btn-sm" type="button" (click)="jsonProccess($event)">Muat Saja</button>
+      </div>
+    </div>
+  </div>
+</div>

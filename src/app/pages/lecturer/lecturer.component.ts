@@ -10,7 +10,7 @@ import { Data } from "../../classes/data";
 export class LecturerComponent implements OnInit {
   model: any;
   storeMode: string;
-  lecturers = Data.getLecturers();
+  lecturers = Data.master.lecturers;
   workingIndex;
 
   constructor() {
