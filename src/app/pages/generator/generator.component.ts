@@ -9,6 +9,7 @@ import { GA, Population } from 'src/app/classes/population';
   styleUrls: ['./generator.component.css']
 })
 export class GeneratorComponent implements OnInit {
+  dataClass = Data;
   data = Data.master;
   uploadedFile;
 
@@ -32,7 +33,8 @@ export class GeneratorComponent implements OnInit {
   lastBestFitness: number;
   populationStagnant: number = 0
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }

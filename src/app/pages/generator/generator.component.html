@@ -3,18 +3,18 @@
   <div class="p-0 flex-grow-1 bd-highlight">
     <h1 class="h3 mb-0 text-gray-800">Ringkasan</h1>
   </div>
-  <div class="p-2 bd-highlight">
+  <div class="p-2 bd-highlight" *ngIf="dataClass.isEmptyData()">
     <input id="jsonfile" type="file" accept=".json" (change)="onChangeFile($event)" style="display: none;">
     <button class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm" (click)="uploadBtnClick()">
       <i class="fas fa-upload fa-sm text-white-50"></i> Unggah Data
     </button>
   </div>
-  <div class="p-2 bd-highlight">
+  <div class="p-2 bd-highlight" *ngIf="!dataClass.isEmptyData()">
     <button (click)="downloadData()" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
       <i class="fas fa-download fa-sm text-white-50"></i> Unduh Data
     </button>
   </div>
-  <div class="p-2 bd-highlight">
+  <div class="p-2 bd-highlight" *ngIf="!dataClass.isEmptyData()">
     <button data-toggle="modal" data-target="#wipeDataModal"
       class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm">
       <i class="fas fa-trash fa-sm text-white-50"></i> Hapus Data
