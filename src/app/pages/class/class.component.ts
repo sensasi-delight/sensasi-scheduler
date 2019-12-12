@@ -3,11 +3,12 @@ import { Data } from 'src/app/classes/data';
 import { Class } from 'src/app/models/class';
 
 @Component({
-  selector: 'app-classes',
-  templateUrl: './classes.component.html',
-  styleUrls: ['./classes.component.css']
+  selector: 'app-class',
+  templateUrl: './class.component.html',
+  styleUrls: ['./class.component.css']
 })
-export class ClassesComponent implements OnInit {
+export class ClassComponent implements OnInit {
+
   model: any;
   storeMode: string;
   classes = Data.master.classes;
@@ -90,4 +91,5 @@ export class ClassesComponent implements OnInit {
       }
     }
   }
+
 }

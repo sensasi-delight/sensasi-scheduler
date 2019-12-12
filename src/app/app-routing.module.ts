@@ -4,13 +4,12 @@ import { Routes, RouterModule } from '@angular/router';
 import { LecturerComponent } from './pages/lecturer/lecturer.component';
 import { AboutComponent } from './pages/about/about.component';
 import { GeneratorComponent } from './pages/generator/generator.component';
-import { ClassesComponent } from './pages/classes/classes.component';
 import { ClassroomComponent } from './pages/classroom/classroom.component';
-
+import { ClassComponent } from './pages/class/class.component';
 
 const routes: Routes = [
   {path: '', component: GeneratorComponent},
-  {path: 'classes', component: ClassesComponent},
+  {path: 'class', component: ClassComponent},
   {path: 'classroom', component: ClassroomComponent},
   {path: 'lecturer', component: LecturerComponent},
   {path: 'about', component: AboutComponent}

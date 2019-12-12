@@ -9,7 +9,7 @@ import { LecturerComponent } from './pages/lecturer/lecturer.component';
 import { AboutComponent } from './pages/about/about.component';
 import { GeneratorComponent } from './pages/generator/generator.component';
 import { ClassroomComponent } from './pages/classroom/classroom.component';
-import { ClassesComponent } from './pages/classes/classes.component';
+import { ClassComponent } from './pages/class/class.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +18,7 @@ import { ClassesComponent } from './pages/classes/classes.component';
     AboutComponent,
     GeneratorComponent,
     ClassroomComponent,
-    ClassesComponent
+    ClassComponent
   ],
   imports: [
     BrowserModule,
