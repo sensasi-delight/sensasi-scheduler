@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Data } from 'src/app/classes/data';
 import { Class } from 'src/app/models/class';
+import { StudyProgram } from 'src/app/models/study-program';
 
 @Component({
   selector: 'app-class',
@@ -9,86 +9,82 @@ import { Class } from 'src/app/models/class';
 })
 export class ClassComponent implements OnInit {
 
-  model: any;
+  model: Class = new Class;
   storeMode: string;
-  classes = Data.master.classes;
-  classClass = Class;
-  workingIndex;
+  classes = Class.data;
+  studyPrograms = StudyProgram.data;
+  workingIndex: number;
 
-  constructor() {
-    this.resetModel();
-  }
+  constructor() {}
 
   ngOnInit() {
     $('[data-toggle="tooltip"]').tooltip();
   }
 
   initCreate() {
+    this.model = new Class;
     this.storeMode = 'create';
-    this.resetModel();
-    $('#lecturerFormModal').modal('show');
+    $('#classFormModal').modal('show');
   }
 
   initDelete(index): void {
     this.storeMode = 'delete';
     this.workingIndex = index;
-    this.model = {...this.classes[index]};
-    $('#lecturerDeleteModal').modal('show');
+    Object.assign(this.model, {...this.classes[index]});
+    $('#classDeleteModal').modal('show');
   }
 
   initUpdate(index): void {
     this.storeMode = 'update';
     this.workingIndex = index;
-    this.model = {...this.classes[index]};
-    $('#lecturerFormModal').modal('show');
+    Object.assign(this.model, {...this.classes[index]});
+    $('#classFormModal').modal('show');
   }
 
-  storeLecturer(formData): void {
-    if (this.storeMode == 'create') {
-      this.checkUnique(formData);
-    }
+  storeClass(formData): void {
+    this.checkUnique(formData);
 
     if (formData.form.valid) {
       switch (this.storeMode) {
         case 'create':
-          this.classes.push(formData.form.value);
+          let newClass = new Class;
+          Object.assign(newClass, {...this.model});
+          this.classes.push(newClass);
 
           break;
 
         case 'update':
-          this.classes[this.workingIndex] = {...this.model};
+          Object.assign(this.classes[this.workingIndex], {...this.model});
           break;
 
         default:
           break;
       }
 
-      $('#lecturerFormModal').modal('hide');
+      $('#classFormModal').modal('hide');
+      Class.toLocalStorage();
       formData.resetForm();
-      Data.toLocalStorage();
+
     }
   }
 
-  deleteLecturer(): void {
-    $('#lecturerDeleteModal').modal('hide');
+  deleteClass(): void {
+    $('#classDeleteModal').modal('hide');
     this.classes.splice(this.workingIndex, 1);
-    Data.toLocalStorage()
-  }
-
-  private resetModel():void {
-    this.model = {
-      id: null,
-      name:null
-    };
+    Class.toLocalStorage()
   }
 
   private checkUnique(formData) {
     for (const key in formData.form.controls) {
-      let isExist = this.classes.filter(lecturer =>  lecturer[key] == formData.form.controls[key].value ).length > 0;
-
-      if (isExist) {
-        formData.form.controls[key].setErrors({unique: true})
-      }
+      this.classes.forEach((item, index) => {
+        if (Class.uniqueKeys.indexOf(key) != -1) {
+          if (item[key] == formData.form.controls[key].value) {
+            if (this.storeMode == 'create' || (this.storeMode == 'update' && this.workingIndex != index)) {
+              formData.form.controls[key].setErrors({unique: true})
+            }
+          }
+        }
+      });
     }
   }
 

@@ -29,7 +29,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let class of classClass.data; let i = index">
+            <tr *ngFor="let class of classes; let i = index">
               <td>{{ class.id }}</td>
               <td>{{ class.name }}</td>
               <td>{{ class.grade }}</td>
@@ -65,12 +65,11 @@
 
 </div>
 
-<!-- Lecturer Form Modal-->
-<div class="modal fade" id="lecturerFormModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle"
-  aria-hidden="true">
+<!-- Class Form Modal-->
+<div class="modal fade" id="classFormModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <form #lecturerForm="ngForm" (ngSubmit)="lecturerForm.form.valid && storeLecturer(lecturerForm)">
+      <form #classForm="ngForm" (ngSubmit)="classForm.form.valid && storeClass(classForm)">
         <div class="modal-header">
           <h5 class="modal-title" id="modalTitle">
             {{ storeMode == 'update' ? 'Ubah ' + classes[workingIndex].name : 'Tambah kelas' }}
@@ -83,9 +82,9 @@
 
           <div class="form-group">
             <input name="id" class="form-control" placeholder="Kode kelas" required #id="ngModel" [(ngModel)]="model.id"
-              [ngClass]="{ 'is-invalid': lecturerForm.submitted && id.invalid }" />
+              [ngClass]="{ 'is-invalid': classForm.submitted && id.invalid }" />
 
-            <div *ngIf="lecturerForm.submitted && id.invalid" class="invalid-feedback">
+            <div *ngIf="classForm.submitted && id.invalid" class="invalid-feedback">
               <div *ngIf="id.errors['required']">
                 mohon masukkan kode kelas
               </div>
@@ -95,13 +94,14 @@
               </div>
             </div>
           </div>
-          <div class="form-group">
-            <input name="name" class="form-control" placeholder="Nama" required #name="ngModel" [(ngModel)]="model.name"
-              [ngClass]="{ 'is-invalid': lecturerForm.submitted && name.invalid }" />
 
-            <div *ngIf="lecturerForm.submitted && name.invalid" class="invalid-feedback">
+          <div class="form-group">
+            <input name="name" class="form-control" placeholder="Nama kelas" required #name="ngModel"
+              [(ngModel)]="model.name" [ngClass]="{ 'is-invalid': classForm.submitted && name.invalid }" />
+
+            <div *ngIf="classForm.submitted && name.invalid" class="invalid-feedback">
               <div *ngIf="name.errors['required']">
-                mohon masukkan nama
+                mohon masukkan nama kelas
               </div>
 
               <div *ngIf="name.errors['unique']">
@@ -110,7 +110,42 @@
             </div>
           </div>
 
+          <div class="form-group">
+            <input name="grade" class="form-control" placeholder="Tingkat" required #grade="ngModel"
+              [(ngModel)]="model.grade" [ngClass]="{ 'is-invalid': classForm.submitted && grade.invalid }" />
+
+            <div *ngIf="classForm.submitted && grade.invalid" class="invalid-feedback">
+              <div *ngIf="grade.errors['required']">
+                mohon masukkan tingkat
+              </div>
+
+              <div *ngIf="grade.errors['unique']">
+                data <strong>{{ grade.value }}</strong> sudah ada
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <select name="studyProgramId" class="form-control" placeholder="test" required #studyProgramId="ngModel"
+              [(ngModel)]="model.studyProgramId"
+              [ngClass]="{ 'is-invalid': classForm.submitted && studyProgramId.invalid }">
+              <option disabled [ngValue]="undefined">Program Studi</option>
+
+              <option *ngFor="let studyProgram of studyPrograms" [ngValue]="studyProgram.id">
+                {{ studyProgram.name }}
+              </option>
+            </select>
+
+
+            <div *ngIf="classForm.submitted && studyProgramId.invalid" class="invalid-feedback">
+              <div *ngIf="studyProgramId.errors['required']">
+                mohon masukkan program studi kelas
+              </div>
+            </div>
+
+          </div>
         </div>
+
         <div class="modal-footer">
           <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Batal</button>
           <button class="btn btn-success btn-sm" type="submit">Simpan</button>
@@ -121,25 +156,20 @@
 </div>
 
 
-<div class="modal fade" id="lecturerDeleteModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle"
+<div class="modal fade" id="classDeleteModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle"
   aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-      <!-- <div class="modal-header">
-            <h5 class="modal-title" id="modalTitle">Apa anda yakin menghapus data?</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div> -->
+
       <div class="modal-body text-center">
         <small>Apa anda yakin ingin menghapus data</small>
-        <h4><strong>{{ model.name }}</strong></h4>
+        <h4><strong>{{ model.id }}</strong></h4>
         <small class="text-danger mt-4">*data yang telah terhapus tidak dapat dikembalikan</small>
       </div>
-      <div class="modal-footer">
 
+      <div class="modal-footer">
         <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Batal</button>
-        <button class="btn btn-danger btn-sm" type="button" (click)="deleteLecturer()">Hapus</button>
+        <button class="btn btn-danger btn-sm" type="button" (click)="deleteClass()">Hapus</button>
       </div>
     </div>
   </div>
