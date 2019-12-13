@@ -20,6 +20,7 @@ export class LecturerComponent implements OnInit {
   }
 
   initCreate() {
+    this.model = new Lecturer;
     this.storeMode = 'create';
     Object.assign(this.model, {});
     $('#lecturerFormModal').modal('show');
