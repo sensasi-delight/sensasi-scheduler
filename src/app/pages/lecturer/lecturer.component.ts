@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Data } from "../../classes/data";
+import { Lecturer } from 'src/app/models/lecturer';
 
 @Component({
   selector: 'app-lecturer',
@@ -8,14 +8,12 @@ import { Data } from "../../classes/data";
 })
 
 export class LecturerComponent implements OnInit {
-  model: any;
+  model: Lecturer = new Lecturer;
   storeMode: string;
-  lecturers = Data.master.lecturers;
-  workingIndex;
+  lecturers = Lecturer.data;
+  workingIndex: number;
 
-  constructor() {
-    this.resetModel();
-  }
+  constructor() {}
 
   ngOnInit() {
     $('[data-toggle="tooltip"]').tooltip();
@@ -23,38 +21,38 @@ export class LecturerComponent implements OnInit {
 
   initCreate() {
     this.storeMode = 'create';
-    this.resetModel();
+    Object.assign(this.model, {});
     $('#lecturerFormModal').modal('show');
   }
 
   initDelete(index): void {
     this.storeMode = 'delete';
     this.workingIndex = index;
-    this.model = {...this.lecturers[index]};
+    Object.assign(this.model, {...this.lecturers[index]});
     $('#lecturerDeleteModal').modal('show');
   }
 
   initUpdate(index): void {
     this.storeMode = 'update';
     this.workingIndex = index;
-    this.model = {...this.lecturers[index]};
+    Object.assign(this.model, {...this.lecturers[index]});
     $('#lecturerFormModal').modal('show');
   }
 
   storeLecturer(formData): void {
-    if (this.storeMode == 'create') {
-      this.checkUnique(formData);
-    }
+    this.checkUnique(formData);
 
     if (formData.form.valid) {
       switch (this.storeMode) {
         case 'create':
-          this.lecturers.push(formData.form.value);
+          let newLecturer = new Lecturer;
+          Object.assign(newLecturer, {...this.model})
+          this.lecturers.push(newLecturer);
 
           break;
 
         case 'update':
-          this.lecturers[this.workingIndex] = {...this.model};
+          Object.assign(this.lecturers[this.workingIndex], {...this.model});
           break;
 
         default:
@@ -63,30 +61,27 @@ export class LecturerComponent implements OnInit {
 
       $('#lecturerFormModal').modal('hide');
       formData.resetForm();
-      Data.toLocalStorage();
+      Lecturer.toLocalStorage();
     }
   }
 
   deleteLecturer(): void {
     $('#lecturerDeleteModal').modal('hide');
     this.lecturers.splice(this.workingIndex, 1);
-    Data.toLocalStorage()
-  }
-
-  private resetModel():void {
-    this.model = {
-      id: null,
-      name:null
-    };
+    Lecturer.toLocalStorage();
   }
 
   private checkUnique(formData) {
     for (const key in formData.form.controls) {
-      let isExist = this.lecturers.filter(lecturer =>  lecturer[key] == formData.form.controls[key].value ).length > 0;
-
-      if (isExist) {
-        formData.form.controls[key].setErrors({unique: true})
-      }
+      this.lecturers.forEach((lecturer, index) => {
+        if (Lecturer.uniqueKeys.indexOf(key) != -1) {
+          if (lecturer[key] == formData.form.controls[key].value) {
+            if (this.storeMode == 'create' || (this.storeMode == 'update' && this.workingIndex != index)) {
+              formData.form.controls[key].setErrors({unique: true})
+            }
+          }
+        }
+      });
     }
   }
 }

@@ -11,10 +11,8 @@
       <div class="card-header py-3">
 
         <!-- <label for="">Data</label> -->
-        <button class="btn btn-success btn-circle btn-sm"
-          data-toggle="tooltip" data-placement="top" title="Tambah dosen"
-          (click)="initCreate()"
-        >
+        <button class="btn btn-success btn-circle btn-sm" data-toggle="tooltip" data-placement="top"
+          title="Tambah dosen" (click)="initCreate()">
           <i class="fa fa-plus"></i>
         </button>
       </div>
@@ -22,7 +20,7 @@
         <p class="text-center" *ngIf="lecturers.length === 0">Silahkan masukkan data dosen</p>
         <table class="table table-default table-sm" *ngIf="lecturers.length !== 0">
           <thead>
-            <tr>
+            <tr style="border-top: hidden;">
               <th>Kode</th>
               <th>Nama</th>
               <th>Aksi</th>
@@ -80,10 +78,8 @@
         <div class="modal-body">
 
           <div class="form-group">
-            <input name="id" class="form-control" placeholder="Kode Dosen" required
-              #id="ngModel" [(ngModel)]="model.id"
-              [ngClass]="{ 'is-invalid': lecturerForm.submitted && id.invalid }"
-            />
+            <input name="id" class="form-control" placeholder="Kode Dosen" required #id="ngModel" [(ngModel)]="model.id"
+              [ngClass]="{ 'is-invalid': lecturerForm.submitted && id.invalid }" />
 
             <div *ngIf="lecturerForm.submitted && id.invalid" class="invalid-feedback">
               <div *ngIf="id.errors['required']">
@@ -96,10 +92,8 @@
             </div>
           </div>
           <div class="form-group">
-            <input name="name" class="form-control" placeholder="Nama" required
-              #name="ngModel" [(ngModel)]="model.name"
-              [ngClass]="{ 'is-invalid': lecturerForm.submitted && name.invalid }"
-            />
+            <input name="name" class="form-control" placeholder="Nama" required #name="ngModel" [(ngModel)]="model.name"
+              [ngClass]="{ 'is-invalid': lecturerForm.submitted && name.invalid }" />
 
             <div *ngIf="lecturerForm.submitted && name.invalid" class="invalid-feedback">
               <div *ngIf="name.errors['required']">
@@ -127,22 +121,17 @@
   aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-        <!-- <div class="modal-header">
-          <h5 class="modal-title" id="modalTitle">Apa anda yakin menghapus data?</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-          </button>
-        </div> -->
-        <div class="modal-body text-center">
-          <small>Apa anda yakin ingin menghapus data</small>
-          <h4><strong>{{ model.name }}</strong></h4>
-          <small class="text-danger mt-4">*data yang telah terhapus tidak dapat dikembalikan</small>
-        </div>
-        <div class="modal-footer">
 
-          <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Batal</button>
-          <button class="btn btn-danger btn-sm" type="button" (click)="deleteLecturer()">Hapus</button>
-        </div>
+      <div class="modal-body text-center">
+        <small>Apa anda yakin ingin menghapus data</small>
+        <h4><strong>{{ model.id }}</strong></h4>
+        <small class="text-danger mt-4">*data yang telah terhapus tidak dapat dikembalikan</small>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Batal</button>
+        <button class="btn btn-danger btn-sm" type="button" (click)="deleteLecturer()">Hapus</button>
+      </div>
     </div>
   </div>
 </div>
