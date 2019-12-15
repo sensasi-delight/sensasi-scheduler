@@ -23,6 +23,7 @@
             <tr style="border-top: hidden;">
               <th>Kode</th>
               <th>Nama</th>
+              <th>Total jam</th>
               <th>Aksi</th>
             </tr>
           </thead>
@@ -30,6 +31,7 @@
             <tr *ngFor="let lecturer of lecturers; let i = index">
               <td>{{ lecturer.id }}</td>
               <td>{{ lecturer.name }}</td>
+              <td>{{ lecturer.getSumDuration() }}</td>
               <td>
                 <div class="dropdown no-arrow">
                   <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton"

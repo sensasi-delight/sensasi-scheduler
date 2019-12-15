@@ -1,11 +1,19 @@
 import { environment } from 'src/environments/environment';
-import { StudyProgram } from './study-program';
+
+export class Subject {
+  name: string;
+  type: string;
+  lecturer1Id: string;
+  lecturer2Id: string;
+  duration: number;
+}
 
 export class Class {
-  id;
-  name;
-  studyProgramId;
+  id: string;
+  name: string;
+  studyProgram: string;
   grade: number;
+  subjects = [];
 
   static uniqueKeys = [
     'id'
@@ -27,6 +35,9 @@ export class Class {
       local['classes'].forEach(element => {
         let temp = new Class;
         Object.assign(temp, element);
+        if (!temp.subjects) {
+          temp.subjects = [];
+        }
         result.push(temp);
       });
     }
@@ -34,20 +45,15 @@ export class Class {
     return result;
   }
 
+  getSumSubjectsDuration() {
+    // return this.subjects.reduce((a, b) => a.duration + b.duration, 0);
+    return this.subjects.reduce((a, b) => a + (b.duration || 0), 0);
+
+  }
+
   static toLocalStorage() {
     let local = JSON.parse(localStorage.getItem(environment.localStorageItemName));
     local['classes'] = Class.data;
     localStorage.setItem(environment.localStorageItemName, JSON.stringify(local));
-  }
-
-
-
-  getStudyProgram() {
-    if (this.studyProgramId) {
-      return StudyProgram.find(this.studyProgramId);
-    } else {
-      return new StudyProgram;
-    }
-
   }
 }

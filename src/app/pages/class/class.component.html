@@ -1,18 +1,18 @@
-<!-- Page Heading -->
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-  <h1 class="h3 mb-0 text-gray-800">Daftar Kelas</h1>
-</div>
-
 <div class="row">
 
-  <div class="col-lg-12">
+  <div [ngClass]="isShowSubjects ? 'col-lg-5' : 'col-lg-12'">
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <h1 class="h3 mb-0 text-gray-800">Daftar Kelas</h1>
+    </div>
+
     <!-- Basic Card Example -->
     <div class="card shadow mb-4">
       <div class="card-header py-3">
 
         <!-- <label for="">Data</label> -->
-        <button class="btn btn-success btn-circle btn-sm" data-toggle="tooltip" data-placement="top"
-          title="Tambah kelas" (click)="initCreate()">
+        <button class="btn btn-success btn-circle btn-sm" (click)="initCreate()"
+          data-toggle="tooltip" data-placement="top" title="Tambah kelas">
           <i class="fa fa-plus"></i>
         </button>
       </div>
@@ -25,15 +25,16 @@
               <th>Nama</th>
               <th>Tingkat</th>
               <th>Program Studi</th>
-              <th>Aksi</th>
+              <th></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let class of classes; let i = index">
+            <tr *ngFor="let class of classes; let i = index" >
               <td>{{ class.id }}</td>
               <td>{{ class.name }}</td>
               <td>{{ class.grade }}</td>
-              <td>{{ class.getStudyProgram().name }}</td>
+              <td>{{ class.studyProgram }}</td>
               <td>
                 <div class="dropdown no-arrow">
                   <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton"
@@ -54,6 +55,11 @@
                   </div>
                 </div>
               </td>
+              <td>
+                <button class="btn btn-link" (click)="viewSubjects(i)">
+                  <i class="fa fa-book"></i>
+                </button>
+              </td>
             </tr>
           </tbody>
 
@@ -63,6 +69,82 @@
 
   </div>
 
+  <div class="col-lg-7" [class.d-none]="!isShowSubjects">
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <h1 class="h3 mb-0 text-gray-800">Mata Kuliah {{ model.id }}</h1>
+    </div>
+
+    <!-- Basic Card Example -->
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <button class="btn btn-success btn-circle btn-sm" data-toggle="tooltip" data-placement="top"
+          title="Tambah mata kuliah" (click)="initCreateSubject()">
+          <i class="fa fa-plus"></i>
+        </button>
+        <button class="btn btn-primary btn-circle btn-sm ml-2" data-toggle="tooltip" data-placement="top"
+          title="Salin mata kuliah" (click)="initCopySubjects()">
+          <i class="fa fa-copy"></i>
+        </button>
+      </div>
+      <div class="card-body">
+        <p class="text-center" *ngIf="model.subjects.length === 0">Silahkan masukkan data mata kuliah</p>
+        <table class="table table-default table-sm" *ngIf="model.subjects.length !== 0">
+          <thead>
+            <tr style="border-top: hidden;">
+              <th>Nama</th>
+              <th>Jenis</th>
+              <th>Pengampu 1</th>
+              <th>Pengampu 2</th>
+              <th>Durasi</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let subject of model.subjects; let i = index">
+              <td>{{ subject.name }}</td>
+              <td>{{ subject.type }}</td>
+              <td>{{ subject.lecturer1Id }}</td>
+              <td>{{ subject.lecturer2Id }}</td>
+              <td>{{ subject.duration }}</td>
+
+              <td>
+                <div class="dropdown no-arrow">
+                  <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v"></i>
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <button class="dropdown-item" (click)="initUpdateSubject(i)">
+                      <div class="float-right">
+                        <i class="fa fa-pen"></i>
+                      </div> Ubah
+                    </button>
+                    <button class="dropdown-item" data-toggle="modal" (click)="initDeleteSubject(i)">
+                      <div class="float-right">
+                        <i class="fa fa-trash"></i>
+                      </div> Hapus
+                    </button>
+                  </div>
+                </div>
+              </td>
+              <td></td>
+            </tr>
+          </tbody>
+
+          <tfoot>
+            <tr>
+              <th colspan="4">Total</th>
+              <th>{{ model.getSumSubjectsDuration() }}</th>
+              <th></th>
+            </tr>
+          </tfoot>
+
+        </table>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <!-- Class Form Modal-->
@@ -103,10 +185,6 @@
               <div *ngIf="name.errors['required']">
                 mohon masukkan nama kelas
               </div>
-
-              <div *ngIf="name.errors['unique']">
-                data <strong>{{ name.value }}</strong> sudah ada
-              </div>
             </div>
           </div>
 
@@ -118,31 +196,18 @@
               <div *ngIf="grade.errors['required']">
                 mohon masukkan tingkat
               </div>
-
-              <div *ngIf="grade.errors['unique']">
-                data <strong>{{ grade.value }}</strong> sudah ada
-              </div>
             </div>
           </div>
 
           <div class="form-group">
-            <select name="studyProgramId" class="form-control" placeholder="test" required #studyProgramId="ngModel"
-              [(ngModel)]="model.studyProgramId"
-              [ngClass]="{ 'is-invalid': classForm.submitted && studyProgramId.invalid }">
-              <option disabled [ngValue]="undefined">Program Studi</option>
+            <input name="studyProgram" class="form-control" placeholder="Program Studi" required #studyProgram="ngModel"
+              [(ngModel)]="model.studyProgram" [ngClass]="{ 'is-invalid': classForm.submitted && studyProgram.invalid }" />
 
-              <option *ngFor="let studyProgram of studyPrograms" [ngValue]="studyProgram.id">
-                {{ studyProgram.name }}
-              </option>
-            </select>
-
-
-            <div *ngIf="classForm.submitted && studyProgramId.invalid" class="invalid-feedback">
-              <div *ngIf="studyProgramId.errors['required']">
-                mohon masukkan program studi kelas
+            <div *ngIf="classForm.submitted && studyProgram.invalid" class="invalid-feedback">
+              <div *ngIf="studyProgram.errors['required']">
+                mohon masukkan program studi
               </div>
             </div>
-
           </div>
         </div>
 
@@ -174,3 +239,150 @@
     </div>
   </div>
 </div>
+<!-- /Class Form Modal-->
+
+
+
+
+<!-- Subject Form Modal-->
+<div class="modal fade" id="subjectFormModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form #subjectForm="ngForm" (ngSubmit)="subjectForm.form.valid && storeSubject(subjectForm)">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitle">
+            {{ storeMode == 'update' ? 'Ubah ' + subjectModel.name : 'Tambah mata kuliah' }}
+          </h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <input name="name" class="form-control" placeholder="Nama" required #name="ngModel"
+              [(ngModel)]="subjectModel.name" [ngClass]="{ 'is-invalid': subjectForm.submitted && name.invalid }" />
+
+            <div *ngIf="subjectForm.submitted && name.invalid" class="invalid-feedback">
+              <div *ngIf="name.errors['required']">
+                mohon masukkan nama mata kuliah
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <select name="type" class="form-control" required #type="ngModel" [(ngModel)]="subjectModel.type"
+            [ngClass]="{ 'is-invalid': subjectForm.submitted && type.invalid }">
+              <option>Teori</option>
+              <option>Praktik</option>
+            </select>
+
+            <div *ngIf="subjectForm.submitted && type.invalid" class="invalid-feedback">
+              <div *ngIf="type.errors['required']">
+                mohon masukkan jenis mata kuliah
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <ng-select2 name="lecturer1Id" required
+              [options]="{theme: 'bootstrap4'}"
+              [data]="select2LecturerOptions"
+              [(ngModel)]="subjectModel.lecturer1Id"
+              #lecturer1Id="ngModel"
+              [placeholder]="'Pengampu 1'"
+              [ngClass]="{ 'is-invalid': subjectForm.submitted && lecturer1Id.invalid }">
+            </ng-select2>
+
+            <div *ngIf="subjectForm.submitted && lecturer1Id.invalid" class="invalid-feedback">
+              <div *ngIf="lecturer1Id.errors['required']">
+                mohon masukkan pengampu mata kuliah
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <ng-select2 name="lecturer2Id"
+              [options]="{theme: 'bootstrap4'}"
+              [allowClear]="true"
+              [data]="select2LecturerOptions"
+              [(ngModel)]="subjectModel.lecturer2Id"
+              #lecturer2Id="ngModel"
+              [placeholder]="'Pengampu 2'"
+              [ngClass]="{ 'is-invalid': subjectForm.submitted && lecturer2Id.invalid }">
+            </ng-select2>
+
+            <!-- <div *ngIf="subjectForm.submitted && lecturer2Id.invalid" class="invalid-feedback">
+              <div *ngIf="lecturer2Id.errors['required']">
+                mohon masukkan pengampu mata kuliah
+              </div>
+            </div> -->
+          </div>
+
+          <div class="form-group">
+            <input name="duration" type="number" min="1" class="form-control" placeholder="Durasi" required #duration="ngModel"
+              [(ngModel)]="subjectModel.duration" [ngClass]="{ 'is-invalid': subjectForm.submitted && duration.invalid }" />
+
+            <div *ngIf="subjectForm.submitted && duration.invalid" class="invalid-feedback">
+              <div *ngIf="duration.errors['required']">
+                mohon masukkan durasi
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Batal</button>
+          <button class="btn btn-success btn-sm" type="submit">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="subjectDeleteModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+
+      <div class="modal-body text-center">
+        <small>Apa anda yakin ingin menghapus data</small>
+        <h4><strong>{{ subjectModel.name }}</strong></h4>
+        <small class="text-danger mt-4">*data yang telah terhapus tidak dapat dikembalikan</small>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Batal</button>
+        <button class="btn btn-danger btn-sm" type="button" (click)="deleteSubject()">Hapus</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="subjectsCopyModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+
+      <div class="modal-body text-center">
+        <small>Salin mata kuliah & pengampu <strong>{{ model.id }}</strong> dari kelas:</small>
+        <div class="form-group">
+          <ng-select2 required #classCopyIndex
+            [options]="{theme: 'bootstrap4'}"
+            [data]="select2ClassOptions"
+            [placeholder]="'Pilih kelas'">
+          </ng-select2>
+        </div>
+
+        <!-- <h4><strong>{{ model.id }}</strong></h4> -->
+        <small class="text-danger mt-4">*menyalin data akan menimpa data <strong>{{ model.id }}</strong> yang telah ada</small>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Batal</button>
+        <button class="btn btn-primary btn-sm" type="button" (click)="copySubjects(classCopyIndex.element[0].value)">Salin</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Subject Form Modal-->
