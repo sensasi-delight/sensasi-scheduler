@@ -26,10 +26,13 @@
             "styles": [
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "node_modules/startbootstrap-sb-admin-2/css/sb-admin-2.min.css",
+              "node_modules/select2/dist/css/select2.min.css",
+              "node_modules/@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css",
               "src/styles.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/select2/dist/js/select2.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
               "node_modules/jquery.easing/jquery.easing.min.js",
               "node_modules/startbootstrap-sb-admin-2/js/sb-admin-2.min.js"
