@@ -14,6 +14,7 @@ export class Class {
   studyProgram: string;
   grade: number;
   subjects = [];
+  timeSlotId: string;
 
   static uniqueKeys = [
     'id'

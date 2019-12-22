@@ -25,6 +25,7 @@
               <th>Nama</th>
               <th>Tingkat</th>
               <th>Program Studi</th>
+              <th>Slot Waktu</th>
               <th></th>
               <th></th>
             </tr>
@@ -35,6 +36,7 @@
               <td>{{ class.name }}</td>
               <td>{{ class.grade }}</td>
               <td>{{ class.studyProgram }}</td>
+              <td>{{ class.timeSlotId }}</td>
               <td>
                 <div class="dropdown no-arrow">
                   <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton"
@@ -128,7 +130,6 @@
                   </div>
                 </div>
               </td>
-              <td></td>
             </tr>
           </tbody>
 
@@ -209,6 +210,19 @@
               </div>
             </div>
           </div>
+
+          <select name="timeSlotId" class="form-control" required
+            #timeSlotId="ngModel" [(ngModel)]="model.timeSlotId" [ngClass]="{ 'is-invalid': classForm.submitted && timeSlotId.invalid }">
+              <option value="undefined" hidden>Slot Waktu</option>
+              <option value="null" hidden>Slot Waktu</option>
+              <option *ngFor="let timeSlot of timeSlots;">{{ timeSlot.id }}</option>
+            </select>
+
+            <div *ngIf="classForm.submitted && timeSlotId.invalid" class="invalid-feedback">
+              <div *ngIf="timeSlotId.errors['required']">
+                mohon masukkan slot waktu kelas
+              </div>
+            </div>
         </div>
 
         <div class="modal-footer">
@@ -270,8 +284,9 @@
           </div>
 
           <div class="form-group">
-            <select name="type" class="form-control" required #type="ngModel" [(ngModel)]="subjectModel.type"
-            [ngClass]="{ 'is-invalid': subjectForm.submitted && type.invalid }">
+            <select name="type" class="form-control" required
+            #type="ngModel" [(ngModel)]="subjectModel.type" [ngClass]="{ 'is-invalid': subjectForm.submitted && type.invalid }">
+              <option value="undefined" hidden disabled>Jenis</option>
               <option>Teori</option>
               <option>Praktik</option>
             </select>
@@ -279,6 +294,17 @@
             <div *ngIf="subjectForm.submitted && type.invalid" class="invalid-feedback">
               <div *ngIf="type.errors['required']">
                 mohon masukkan jenis mata kuliah
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <input name="duration" type="number" min="1" class="form-control" placeholder="Durasi" required #duration="ngModel"
+              [(ngModel)]="subjectModel.duration" [ngClass]="{ 'is-invalid': subjectForm.submitted && duration.invalid }" />
+
+            <div *ngIf="subjectForm.submitted && duration.invalid" class="invalid-feedback">
+              <div *ngIf="duration.errors['required']">
+                mohon masukkan durasi
               </div>
             </div>
           </div>
@@ -310,23 +336,6 @@
               [placeholder]="'Pengampu 2'"
               [ngClass]="{ 'is-invalid': subjectForm.submitted && lecturer2Id.invalid }">
             </ng-select2>
-
-            <!-- <div *ngIf="subjectForm.submitted && lecturer2Id.invalid" class="invalid-feedback">
-              <div *ngIf="lecturer2Id.errors['required']">
-                mohon masukkan pengampu mata kuliah
-              </div>
-            </div> -->
-          </div>
-
-          <div class="form-group">
-            <input name="duration" type="number" min="1" class="form-control" placeholder="Durasi" required #duration="ngModel"
-              [(ngModel)]="subjectModel.duration" [ngClass]="{ 'is-invalid': subjectForm.submitted && duration.invalid }" />
-
-            <div *ngIf="subjectForm.submitted && duration.invalid" class="invalid-feedback">
-              <div *ngIf="duration.errors['required']">
-                mohon masukkan durasi
-              </div>
-            </div>
           </div>
         </div>
 

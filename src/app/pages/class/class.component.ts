@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Class, Subject } from 'src/app/models/class';
 import { Lecturer } from 'src/app/models/lecturer';
 import { Select2OptionData } from 'ng-select2';
+import { TimeSlot } from 'src/app/models/time-slot';
 
 @Component({
   selector: 'app-class',
@@ -16,6 +17,7 @@ export class ClassComponent implements OnInit {
   storeMode: string;
   classes = Class.data;
   workingIndex: number;
+  timeSlots: Array<TimeSlot> = TimeSlot.data;
 
   constructor() {}
 
