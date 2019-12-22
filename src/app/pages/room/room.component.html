@@ -1,1 +1,153 @@
-<p>room works!</p>
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+  <h1 class="h3 mb-0 text-gray-800">Daftar Ruangan</h1>
+</div>
+
+<div class="row">
+
+  <div class="col-lg-12">
+    <!-- Basic Card Example -->
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+
+        <!-- <label for="">Data</label> -->
+        <button class="btn btn-success btn-circle btn-sm" data-toggle="tooltip" data-placement="top"
+          title="Tambah ruangan" (click)="initCreate()">
+          <i class="fa fa-plus"></i>
+        </button>
+      </div>
+      <div class="card-body">
+        <p class="text-center" *ngIf="rooms.length === 0">Silahkan masukkan data dosen</p>
+        <table class="table table-default table-sm" *ngIf="rooms.length !== 0">
+          <thead>
+            <tr style="border-top: hidden;">
+              <th>Kode</th>
+              <th>Nama</th>
+              <th>Jenis</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let room of rooms; let i = index">
+              <td>{{ room.id }}</td>
+              <td>{{ room.name }}</td>
+              <td>{{ room.type }}</td>
+              <td>
+                <div class="dropdown no-arrow">
+                  <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v"></i>
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <button class="dropdown-item" (click)="initUpdate(i)">
+                      <div class="float-right">
+                        <i class="fa fa-pen"></i>
+                      </div> Ubah
+                    </button>
+                    <button class="dropdown-item" data-toggle="modal" (click)="initDelete(i)">
+                      <div class="float-right">
+                        <i class="fa fa-trash"></i>
+                      </div> Hapus
+                    </button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Lecturer Form Modal-->
+<div class="modal fade" id="roomFormModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form #roomForm="ngForm" (ngSubmit)="roomForm.form.valid && storeRoom(roomForm)">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitle">
+            {{ storeMode == 'update' ? 'Ubah ' + rooms[workingIndex].name : 'Tambah ruangan' }}
+          </h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <div class="form-group">
+            <input name="id" class="form-control" placeholder="Kode ruangan" required #id="ngModel" [(ngModel)]="model.id"
+              [ngClass]="{ 'is-invalid': roomForm.submitted && id.invalid }" />
+
+            <div *ngIf="roomForm.submitted && id.invalid" class="invalid-feedback">
+              <div *ngIf="id.errors['required']">
+                mohon masukkan kode ruangan
+              </div>
+
+              <div *ngIf="id.errors['unique']">
+                data <strong>{{ id.value }}</strong> sudah ada
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <input name="name" class="form-control" placeholder="Nama" required #name="ngModel" [(ngModel)]="model.name"
+              [ngClass]="{ 'is-invalid': roomForm.submitted && name.invalid }" />
+
+            <div *ngIf="roomForm.submitted && name.invalid" class="invalid-feedback">
+              <div *ngIf="name.errors['required']">
+                mohon masukkan nama
+              </div>
+
+              <div *ngIf="name.errors['unique']">
+                data <strong>{{ name.value }}</strong> sudah ada
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <select name="_type" class="form-control" required
+              #_type="ngModel" [(ngModel)]="model._type" [ngClass]="{ 'is-invalid': roomForm.submitted && _type.invalid }">
+            <option value="undefined" hidden disabled>Jenis</option>
+            <option *ngFor="let type of RoomClass.types; let i = index" value="{{ i }}">{{ type }}</option>
+            </select>
+
+            <div *ngIf="roomForm.submitted && _type.invalid" class="invalid-feedback">
+              <div *ngIf="_type.errors['required']">
+                mohon masukkan jenis ruangan
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Batal</button>
+          <button class="btn btn-success btn-sm" type="submit">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="roomDeleteModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+
+      <div class="modal-body text-center">
+        <small>Apa anda yakin ingin menghapus data</small>
+        <h4><strong>{{ model.id }}</strong></h4>
+        <small class="text-danger mt-4">*data yang telah terhapus tidak dapat dikembalikan</small>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Batal</button>
+        <button class="btn btn-danger btn-sm" type="button" (click)="deleteRoom()">Hapus</button>
+      </div>
+    </div>
+  </div>
+</div>
