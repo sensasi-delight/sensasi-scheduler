@@ -9,8 +9,9 @@ import { AppComponent } from './app.component';
 import { LecturerComponent } from './pages/lecturer/lecturer.component';
 import { AboutComponent } from './pages/about/about.component';
 import { GeneratorComponent } from './pages/generator/generator.component';
-import { ClassroomComponent } from './pages/classroom/classroom.component';
 import { ClassComponent } from './pages/class/class.component';
+import { TimeSlotComponent } from './pages/time-slot/time-slot.component';
+import { RoomComponent } from './pages/room/room.component';
 
 @NgModule({
   declarations: [
@@ -18,8 +19,10 @@ import { ClassComponent } from './pages/class/class.component';
     LecturerComponent,
     AboutComponent,
     GeneratorComponent,
-    ClassroomComponent,
-    ClassComponent
+    RoomComponent,
+    ClassComponent,
+    TimeSlotComponent,
+    RoomComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,306 @@
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+  <h1 class="h3 mb-0 text-gray-800">Slot Waktu</h1>
+</div>
+
+<!-- <div class="row"> -->
+
+  <!-- <div class="col-sm-12"> -->
+    <!-- Basic Card Example -->
+    <div class="card shadow mb-4" id="timeSlotCardList">
+      <div class="card-header py-3">
+
+        <!-- <label for="">Data</label> -->
+        <button class="btn btn-success btn-circle btn-sm" (click)="initCreate()" data-toggle="tooltip"
+          data-placement="top" title="Tambah slot waktu">
+          <i class="fa fa-plus"></i>
+        </button>
+      </div>
+      <div class="card-body">
+        <p class="text-center" *ngIf="timeSlots.length === 0">Silahkan tambahkan data slot waktu</p>
+        <table class="table table-default table-sm" *ngIf="timeSlots.length !== 0">
+          <thead>
+            <tr style="border-top: hidden;">
+              <th>Kode</th>
+              <th>Nama</th>
+              <th>Total Slot</th>
+              <th>Menit / Slot</th>
+              <th>Pukul mulai</th>
+              <th>Pukul Istirahat</th>
+              <th>Durasi Istirahat</th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let timeSlot of timeSlots; let i = index">
+              <td>{{ timeSlot.id }}</td>
+              <td>{{ timeSlot.name }}</td>
+              <td>{{ timeSlot.getSumNSlot() }}</td>
+              <td>{{ timeSlot.slotDuration }}</td>
+              <td>{{ timeSlot.startAt }}</td>
+              <td>{{ timeSlot.getBreakTime() }}</td>
+              <td>{{ timeSlot.breakDur }}</td>
+              <td>
+                <div class="dropdown no-arrow">
+                  <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-ellipsis-v"></i>
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <button class="dropdown-item" (click)="initUpdate(i)">
+                      <div class="float-right">
+                        <i class="fa fa-pen"></i>
+                      </div> Ubah
+                    </button>
+                    <button class="dropdown-item" data-toggle="modal" (click)="initDelete(i)">
+                      <div class="float-right">
+                        <i class="fa fa-trash"></i>
+                      </div> Hapus
+                    </button>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <button class="btn btn-link" (click)="viewDays(i)">
+                  <i class="fa fa-cog"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+
+        </table>
+      </div>
+    </div>
+
+  <!-- </div> -->
+
+  <!-- <div class="col-lg-12" style="transition-delay: 0.5s;" [ngClass]="isShowDays ? null : 'fade'"> -->
+    <!-- <div class="d-sm-flex align-items-center justify-content-between mb-4"> -->
+      <!-- <h1 class="h3 mb-0 text-gray-800">Pengaturan {{ model.id }}</h1> -->
+    <!-- </div> -->
+
+    <div class="card shadow mb-4 fade d-none" id="timeSlotCardSetting">
+      <div class="card-header py-3 d-sm-flex align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">Pengaturan {{ model.id }}</h6>
+        <button class="btn btn-link btn-sm py-0" data-toggle="tooltip" data-placement="top"
+          title="Tutup pengaturan" (click)="hideDays()">
+          <i class="fa fa-times"></i>
+        </button>
+        <!-- <button class="btn btn-primary btn-circle btn-sm ml-2" data-toggle="tooltip" data-placement="top"
+          title="Salin mata kuliah" (click)="initCopySubjects()">
+          <i class="fa fa-copy"></i>
+        </button> -->
+      </div>
+      <form #settingForm="ngForm" (ngSubmit)="storeTimeSlotSetting(settingForm)">
+      <div class="card-body">
+
+          <div class="form-group row">
+            <label for="nSlotDay" class="col-sm-4 col-form-label">Jumlah Slot/Hari: </label>
+            <div class="col-sm-8">
+              <input (change)="paramChange()" name="nSlotDay" id="nSlotDay" type="number" min="1" class="form-control"
+                placeholder="Jumlah slot per hari" required #nSlotDay="ngModel" [(ngModel)]="model.nSlotDay"
+                [ngClass]="{ 'is-invalid': classForm.submitted && nSlotDay.invalid }" />
+            </div>
+            <div *ngIf="classForm.submitted && nSlotDay.invalid" class="invalid-feedback">
+              <div *ngIf="nSlotDay.errors['required']">
+                mohon masukkan jumlah slot per hari
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="slotDuration" class="col-sm-4 col-form-label">Durasi/Slot: </label>
+            <div class="col-sm-8">
+              <div class="input-group">
+                <input (change)="paramChange()" name="slotDuration" id="slotDuration" type="number" min="1" class="form-control"
+                  placeholder="Durasi slot (dalam menit)" required #slotDuration="ngModel"
+                  [(ngModel)]="model.slotDuration"
+                  [ngClass]="{ 'is-invalid': settingForm.submitted && slotDuration.invalid }" />
+
+                <div class="input-group-append">
+                  <span class="input-group-text" id="breakDurSuffix">Menit</span>
+                </div>
+              </div>
+
+              <div *ngIf="settingForm.submitted && slotDuration.invalid" class="invalid-feedback">
+                <div *ngIf="slotDuration.errors['required']">
+                  mohon masukkan durasi per slot dalam menit
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="startTime" class="col-sm-4 col-form-label">Pukul mulai: </label>
+            <div class="col-sm-8">
+              <input (change)="paramChange()" type="time" name="startTime" id="startTime" #startTime="ngModel" class="form-control" required
+                [(ngModel)]="model.startAt" [ngClass]="{ 'is-invalid': settingForm.submitted && startTime.invalid }">
+              <div *ngIf="settingForm.submitted && startTime.invalid" class="invalid-feedback">
+                <div *ngIf="startTime.errors['required']">
+                  mohon masukkan pukul mulai
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="breakAfter" class="col-sm-4 col-form-label">Pukul istirahat: </label>
+            <div class="col-sm-8">
+              <select (change)="paramChange()" class="form-control" name="breakAfter" id="breakAfter" #breakAfter="ngModel"
+                [(ngModel)]="model.breakAfter" [ngClass]="{ 'is-invalid': settingForm.submitted && breakAfter.invalid }">
+                <option value="null"></option>
+                <option *ngFor="let option of model.getBreakOptions()" value="{{ option.id }}">{{ option.text }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="breakDur" class="col-sm-4 col-form-label">Durasi istirahat: </label>
+            <div class="col-sm-8">
+              <div class="input-group">
+                <input (change)="paramChange()" name="breakDur" id="breakDur" type="number" min="1" class="form-control"
+                  placeholder="Durasi istirahat" aria-label="Durasi istirahat" aria-describedby="breakDurSuffix"
+                  #breakDur="ngModel" [(ngModel)]="model.breakDur"
+                  [ngClass]="{ 'is-invalid': settingForm.submitted && breakDur.invalid }" />
+                <div class="input-group-append">
+                  <span class="input-group-text" id="breakDurSuffix">Menit</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h6 class="mt-4 pt-4">klik centang pada slot waktu yang aktif:</h6>
+          <table class="table table-default table-sm text-center">
+            <thead>
+              <tr>
+                <th>Pukul</th>
+                <th *ngFor="let name of model.daysName">{{ name }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of model.activeSlots; let i = index">
+                <ng-template *ngIf="row.length == 1; then break; else basic"></ng-template>
+
+                <ng-template #break>
+                  <td>{{ row[0] }}</td>
+                  <td colspan="8">Istirahat</td>
+                </ng-template>
+
+
+                <ng-template #basic>
+                  <!-- <td *ngFor="let col of row; let j = index"> -->
+                    <!-- <input (change)="toggleActive(i, j)" type="checkbox"  [checked]="col" *ngIf="j != 0; else time"> -->
+                    <!-- <ng-template #time>{{ col }}</ng-template> -->
+                  <!-- </td> -->
+                  <td>{{ row[0] }}</td>
+                  <td>
+                    <input type="text" (change)="toggleActive(i, 1)" type="checkbox" [checked]="row[1]">
+                  </td>
+                  <td>
+                    <input type="text" (change)="toggleActive(i, 2)" type="checkbox" [checked]="row[2]">
+                  </td>
+                  <td>
+                    <input type="text" (change)="toggleActive(i, 3)" type="checkbox" [checked]="row[3]">
+                  </td>
+                  <td>
+                    <input type="text" (change)="toggleActive(i, 4)" type="checkbox" [checked]="row[4]">
+                  </td>
+                  <td>
+                    <input type="text" (change)="toggleActive(i, 5)" type="checkbox" [checked]="row[5]">
+                  </td>
+                  <td>
+                    <input type="text" (change)="toggleActive(i, 6)" type="checkbox" [checked]="row[6]">
+                  </td>
+                  <td>
+                    <input type="text" (change)="toggleActive(i, 7)" type="checkbox" [checked]="row[7]">
+                  </td>
+                </ng-template>
+
+              </tr>
+            </tbody>
+          </table>
+
+      </div>
+
+      <div class="card-footer py-3 d-sm-flex align-items-center justify-content-between">
+        <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Batal</button>
+          <button class="btn btn-success btn-sm" type="submit">Simpan</button>
+      </div>
+    </form>
+    </div>
+
+  <!-- </div> -->
+<!-- </div> -->
+
+<!-- Class Form Modal-->
+<div class="modal fade" id="classFormModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form #classForm="ngForm" (ngSubmit)="classForm.form.valid && storeClass(classForm)">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitle">
+            {{ storeMode == 'update' ? 'Ubah ' + timeSlots[workingIndex].name : 'Tambah kelas' }}
+          </h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+
+          <div class="form-group">
+            <input name="id" class="form-control" placeholder="Kode slot waktu" required #id="ngModel"
+              [(ngModel)]="model.id" [ngClass]="{ 'is-invalid': classForm.submitted && id.invalid }" />
+
+            <div *ngIf="classForm.submitted && id.invalid" class="invalid-feedback">
+              <div *ngIf="id.errors['required']">
+                mohon masukkan kode slot waktu
+              </div>
+
+              <div *ngIf="id.errors['unique']">
+                data <strong>{{ id.value }}</strong> sudah ada
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <input name="name" class="form-control" placeholder="Nama slot waktu" required #name="ngModel"
+              [(ngModel)]="model.name" [ngClass]="{ 'is-invalid': classForm.submitted && name.invalid }" />
+
+            <div *ngIf="classForm.submitted && name.invalid" class="invalid-feedback">
+              <div *ngIf="name.errors['required']">
+                mohon masukkan nama slot waktu
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Batal</button>
+          <button class="btn btn-success btn-sm" type="submit">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="classDeleteModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+
+      <div class="modal-body text-center">
+        <small>Apa anda yakin ingin menghapus data</small>
+        <h4><strong>{{ model.id }}</strong></h4>
+        <small class="text-danger mt-4">*data yang telah terhapus tidak dapat dikembalikan</small>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Batal</button>
+        <button class="btn btn-danger btn-sm" type="button" (click)="deleteClass()">Hapus</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Class Form Modal-->
