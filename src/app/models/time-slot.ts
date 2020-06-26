@@ -1,13 +1,17 @@
 import { environment } from 'src/environments/environment';
+import { Class } from './class';
 
 export class TimeSlot {
   id: string;
   name: string;
   slotDuration: number; //in minute
-  _startAt: number;
-  _breakAfter: any;
-  breakDur: number;
-  daysName = [
+  _startAt: number; //in minute, from (00:00 * 60) to (23:59 * 60)
+  _breakAt: number; //in minute, from (00:00 * 60) to (23:59 * 60)
+  breakDuration: number; //in minute
+  nSlotDay: number;
+  slots: Array<boolean>;
+
+  static daysName = [
     'Senin',
     'Selasa',
     'Rabu',
@@ -16,48 +20,6 @@ export class TimeSlot {
     'Sabtu',
     'Minggu'
   ];
-
-  activeSlots: Array<Array<any>>;
-
-  nSlotDay: number;
-
-  // get activeSlots() {
-  //   if (!this._activeSlots || this._activeSlots.length !== this.nSlotDay + 1) {
-  //     this._activeSlots = this.createActiveSlot();
-  //   }
-
-  //   return this._activeSlots;
-  // }
-
-  updateActiveSlot() {
-    this.activeSlots = this.createActiveSlot();
-  }
-
-  createActiveSlot() {
-    let temp = [];
-    let timeTemp = this._startAt || 0;
-    let activeSlotsTemp = this.activeSlots || [];
-    activeSlotsTemp.length = this.nSlotDay || 0;
-
-
-    for (let i = 0; i < activeSlotsTemp.length; i++) {
-      const test = activeSlotsTemp[i] || [];
-      // let row = [];
-      let row: Array<any> = [this.minToTime(timeTemp) + '-' + this.minToTime(timeTemp += this.slotDuration || 0)];
-      this.daysName.forEach((name, j) => {
-        row.push((test[j + 1] || false));
-      });
-
-      temp.push(row);
-
-      if (i == this._breakAfter) {
-        let row: Array<any> = [this.minToTime(timeTemp) + '-' + this.minToTime(timeTemp += this.breakDur || 0)];
-        temp.push(row);
-      }
-    }
-
-    return temp;
-  }
 
   static data = (() => {
     return TimeSlot.getData();
@@ -92,12 +54,12 @@ export class TimeSlot {
     localStorage.setItem(environment.localStorageItemName, JSON.stringify(local));
   }
 
-  private timeToMin(strTime: string): number {
+  static timeToMin(strTime: string): number {
     const temp = strTime.split(':');
     return parseInt(temp[0]) * 60 + parseInt(temp[1]);
   }
 
-  private minToTime(num) {
+  static minToTime(num) {
     let h: any = Math.floor(num / 60);
     let m: any = num % 60;
 
@@ -112,60 +74,57 @@ export class TimeSlot {
     return h + ':' + m;
   }
 
-  getBreakOptions() {
-    let result = [];
-    let temp = this._startAt;
+  getSumNSlot() {
+    const temp = this.slots || [];
+    return temp.filter(slot => slot == true).length;
+  }
 
-    for (let index = 0; index < this.nSlotDay; index++) {
-      result.push({
-        id: index,
-        text: this.minToTime(temp += this.slotDuration)
-      });
-
+  get slotsxxx() {
+    if (!this.slots) {
+      this.slots = [].constructor((this.nSlotDay || 0) * 7);
+    } else if (this.slots.length != ((this.nSlotDay || 0) * 7)) {
+      this.slots.length = (this.nSlotDay || 0) * 7;
     }
 
-    return result;
+    return this.slots;
   }
 
-  getBreakTime() {
-    return this.minToTime((this._startAt || 0 ) + (this.slotDuration || 0) * (1 * (this._breakAfter || 0) + 1));
+  getDayName(index) {
+    return TimeSlot.daysName[Math.floor((index)/this.nSlotDay)];
   }
 
-  getSumNSlot() {
-    let sum = 0;
+  getTime(index) {
+    const timeIndex = index % this.nSlotDay;
+    const breakIndex = (this._breakAt - this._startAt) / this.slotDuration - 1;
 
-    this.activeSlots.forEach(time => {
-      sum += time.filter(set => set == true).length;
-    });
-
-    return sum;
+    if (timeIndex > breakIndex) {
+      return TimeSlot.minToTime(timeIndex * this.slotDuration + this._startAt + this.breakDuration);
+    } else {
+      return TimeSlot.minToTime(timeIndex * this.slotDuration + this._startAt);
+    }
   }
-
-
-
 
   //GETTER
-  get startAt(): string {
-    return this.minToTime(this._startAt || 0);
+  get startTime(): string {
+    return TimeSlot.minToTime(this._startAt || 0);
   }
 
-  get breakAfter() {
-    return this._breakAfter;
+  get breakTime(): string {
+    if (this._breakAt) {
+      return TimeSlot.minToTime(this._breakAt);
+    } else {
+      return null;
+    }
   }
 
+  get classes(): Array<Class> {
+    return Class.data.filter(classObj => classObj.timeSlotId == this.id)
+  }
 
   //SETTER
-  set breakAfter(param: number) {
-    this._breakAfter = param;
-    this.updateActiveSlot();
-  }
-
-  set startAt(strTime: string) {
+  set startTime(strTime: string) {
     const temp = strTime || '00:00';
-    this._startAt = this.timeToMin(temp);
+    this._startAt = TimeSlot.timeToMin(temp);
   }
-
-
-  // function
 }
 

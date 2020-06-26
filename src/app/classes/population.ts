@@ -8,13 +8,13 @@ export class GA {
 export class Population {
   public Individuals = [];
 
-  constructor(isGenerate: boolean = false) {
+  constructor(isGenerate: boolean = false, timeSlotIndex: number = null) {
 
     for (let i = 0; i < GA.nIndividual; i++) {
       this.Individuals[i] = new Individual;
 
       if (isGenerate) {
-        this.Individuals[i].generate();
+        this.Individuals[i].generate(timeSlotIndex);
       }
     }
   }
@@ -75,7 +75,7 @@ export class Population {
   }
 
   // inidividual 0 tidak di eksekusi
-  public evolusi() {
+  public evolusi(timeSlotIndex) {
     this.Individuals[0] = this.getIndividuTerbaik().clone();
     const individu1 = this.Individuals[0];
 
@@ -89,7 +89,7 @@ export class Population {
     this.Individuals[0] = this.getIndividuTerbaik().clone();
 
     for (let i = 1; i < this.Individuals.length; i++) {
-      this.Individuals[i].mutasi();
+      this.Individuals[i].mutasi(timeSlotIndex);
     }
 
     this.Individuals[0] = this.getIndividuTerbaik().clone();

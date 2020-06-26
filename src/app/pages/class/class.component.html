@@ -90,8 +90,8 @@
         </button>
       </div>
       <div class="card-body">
-        <p class="text-center" *ngIf="model.subjects.length === 0">Silahkan masukkan data mata kuliah</p>
-        <table class="table table-default table-sm" *ngIf="model.subjects.length !== 0">
+        <p class="text-center" *ngIf="model.subjects && model.subjects.length === 0">Silahkan masukkan data mata kuliah</p>
+        <table class="table table-default table-sm" *ngIf="model.subjects && model.subjects.length !== 0">
           <thead>
             <tr style="border-top: hidden;">
               <th>Nama</th>

@@ -14,8 +14,8 @@ export class Individual {
   errors = [];
   Chromosomes = [];
 
-  generate(): void {
-    this.Chromosomes = Data.getChromosomes();
+  generate(timeSlotIndex): void {
+    this.Chromosomes = Data.getChromosomes(timeSlotIndex);
   }
 
   getFitness(): number {
@@ -37,7 +37,7 @@ export class Individual {
       let waktu1_selesai = waktu1_mulai + Chromosome.durasi - 1;
 
       //error waktu jika melewati jumlah slot waktu
-      if (waktu1_selesai > Data.master.timeSlots[0].length) {
+      if (waktu1_selesai > Data.master.timeSlots[0].getSumNSlot()) {
         err_arr[err_i++] = [i, null, 'Waktu Melebihi Slot'];
       }
 
@@ -92,7 +92,7 @@ export class Individual {
     return err_i;
   }
 
-  mutasi() {
+  mutasi(timeSlotIndex) {
 
     for (let i = 0; i < this.Chromosomes.length; i++) {
       if (Math.random() < Individual.tingkat_mutasi) {
@@ -101,7 +101,7 @@ export class Individual {
       }
 
       if (Math.random() < Individual.tingkat_mutasi) {
-        this.Chromosomes[i].waktu = Data.getRandomTimeSlot();
+        this.Chromosomes[i].waktu = Data.getRandomTimeSlot(timeSlotIndex);
         this.isCalcFitness = true;
       }
     };

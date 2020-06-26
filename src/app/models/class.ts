@@ -1,4 +1,5 @@
 import { environment } from 'src/environments/environment';
+// import { TimeSlot } from './time-slot';
 
 export class Subject {
   name: string;
@@ -13,14 +14,14 @@ export class Class {
   name: string;
   studyProgram: string;
   grade: number;
-  subjects = [];
+  subjects: Array<Subject>;
   timeSlotId: string;
 
   static uniqueKeys = [
     'id'
   ];
 
-  static data = (() => {
+  static data: Array<Class> = (() => {
     return Class.getData();
   })();
 
@@ -47,9 +48,7 @@ export class Class {
   }
 
   getSumSubjectsDuration() {
-    // return this.subjects.reduce((a, b) => a.duration + b.duration, 0);
     return this.subjects.reduce((a, b) => a + (b.duration || 0), 0);
-
   }
 
   static toLocalStorage() {
@@ -57,4 +56,8 @@ export class Class {
     local['classes'] = Class.data;
     localStorage.setItem(environment.localStorageItemName, JSON.stringify(local));
   }
+
+  // get timeSlot() {
+  //   return TimeSlot.data.find(timeSlot => timeSlot.id == this.timeSlotId)
+  // }
 }

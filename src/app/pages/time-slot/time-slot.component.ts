@@ -10,7 +10,7 @@ import { TimeSlot } from 'src/app/models/time-slot';
   styleUrls: ['./time-slot.component.css']
 })
 export class TimeSlotComponent implements OnInit {
-
+  timeSlotClass = TimeSlot;
   model: TimeSlot = new TimeSlot;
   storeMode: string;
   timeSlots = TimeSlot.data;
@@ -25,29 +25,19 @@ export class TimeSlotComponent implements OnInit {
   }
 
   initCreate() {
-    // this.isShowSubjects = false;
     this.model = new TimeSlot;
     this.storeMode = 'create';
-    $('#classFormModal').modal('show');
-  }
-
-  initDelete(index): void {
-    // this.isShowSubjects = false;
-    this.storeMode = 'delete';
-    this.workingIndex = index;
-    Object.assign(this.model, {...this.timeSlots[index]});
-    $('#classDeleteModal').modal('show');
+    $('#timeSlotFormModal').modal('show');
   }
 
   initUpdate(index): void {
-    // this.isShowSubjects = false;
     this.storeMode = 'update';
     this.workingIndex = index;
     Object.assign(this.model, {...this.timeSlots[index]});
-    $('#classFormModal').modal('show');
+    $('#timeSlotFormModal').modal('show');
   }
 
-  storeClass(formData): void {
+  storeTimeSlot(formData): void {
     this.checkUnique(formData);
 
     if (formData.form.valid) {
@@ -67,19 +57,22 @@ export class TimeSlotComponent implements OnInit {
           break;
       }
 
-      $('#classFormModal').modal('hide');
+      $('#timeSlotFormModal').modal('hide');
       TimeSlot.toLocalStorage();
       formData.resetForm();
 
     }
   }
 
-  paramChange() {
-    this.model.updateActiveSlot();
+  initDelete(index): void {
+    this.storeMode = 'delete';
+    this.workingIndex = index;
+    Object.assign(this.model, {...this.timeSlots[index]});
+    $('#timeSlotDeleteModal').modal('show');
   }
 
-  deleteClass(): void {
-    $('#classDeleteModal').modal('hide');
+  deleteTimeSlot(): void {
+    $('#timeSlotDeleteModal').modal('hide');
     this.timeSlots.splice(this.workingIndex, 1);
     TimeSlot.toLocalStorage();
   }
@@ -99,42 +92,19 @@ export class TimeSlotComponent implements OnInit {
   }
 
 
-
-
-  // subject block
-
-  // subjects = [];
-  // subjectModel = new Subject;
-  // subjectWorkingIndex: number;
-  // select2LecturerOptions: Array<Select2OptionData> = Lecturer.toSelect2Options();
-  // select2ClassOptions: Array<Select2OptionData> = this.timeSlots.map((obj, index) => {
-  //   return {
-  //     id: index.toString(),
-  //     text: obj.id
-  //   };
-  // });
-
-
-  viewDays(index) {
+  viewDays(index: number) {
     this.workingIndex = index;
     Object.assign(this.model, {...this.timeSlots[index]});
-    // this.activeTemp = [...this.timeSlots[index]._activeSlots];
 
-
-    // UI BLOCK
     $('#timeSlotCardList').addClass('d-none');
     $('#timeSlotCardSetting').removeClass('d-none');
 
     setTimeout(() => {
       $('#timeSlotCardSetting').addClass('show');
     }, 300);
-    // /UI BLOCK
   }
 
   hideDays() {
-    // this.workingIndex = index;
-    // Object.assign(this.model, {...this.timeSlots[index]});
-
     $('#timeSlotCardSetting').removeClass('show');
     setTimeout(() => {
       $('#timeSlotCardList').removeClass('d-none');
@@ -142,49 +112,57 @@ export class TimeSlotComponent implements OnInit {
     }, 300);
   }
 
-
-
-  // activeTemp;
-
-  toggleActive(i, j) {
-    // console.log(i, j);
-    this.model.activeSlots[i][j] = !this.model.activeSlots[i][j];
-  }
-
   storeTimeSlotSetting(formData): void {
     Object.assign(this.timeSlots[this.workingIndex], {...this.model});
-
-    // console.log(this.model);
-
-
-  //   // this.checkUnique(formData);
-
-  //   if (formData.form.valid) {
-  //     switch (this.storeMode) {
-  //       case 'create':
-  //         this.timeSlots[this.workingIndex].subjects.push(Object.assign(new Subject, {...this.subjectModel}));
-  //         break;
-
-  //       case 'update':
-  //         Object.assign(this.timeSlots[this.workingIndex].subjects[this.subjectWorkingIndex], {...this.subjectModel});
-  //         break;
-
-  //       default:
-  //         break;
-  //     }
-
-      // $('#subjectFormModal').modal('hide');
-      TimeSlot.toLocalStorage();
-      alert('Perubahan telah tersimpan');
-      // formData.resetForm();
-
-  //   }
+    TimeSlot.toLocalStorage();
+    alert('Perubahan telah tersimpan');
   }
 
-  // timeChange(event) {
-  //   this.model.startAt = event.viewModel;
-  //   console.log(this.model);
+  toggleActive(i: number, j: number) {
+    let index = i * TimeSlot.daysName.length + j - 1;
+    const breakIndex = (this.model._breakAt - this.model._startAt) / this.model.slotDuration - 1;
 
-  // }
+    if (i > breakIndex) {
+      index = index - TimeSlot.daysName.length;
+    }
 
+    this.model.slots[index] = !this.model.slots[index];
+  }
+
+  getTimeSlotsInput() {
+    let temp = [];
+    let timeTemp = this.model._startAt || 0;
+    const slotTemp = this.model.slotsxxx;
+    let slotIndex = 0;
+
+    for (let i = 0; i < this.model.nSlotDay; i++) {
+      let row: Array<any> = [TimeSlot.minToTime(timeTemp) + '-' + TimeSlot.minToTime(timeTemp += this.model.slotDuration || 0)];
+      TimeSlot.daysName.forEach(name => {
+        row.push((slotTemp[slotIndex++] || false));
+      });
+
+      temp.push(row);
+
+      if (this.model._breakAt && timeTemp == this.model._breakAt) {
+        let row: Array<any> = [TimeSlot.minToTime(timeTemp) + '-' + TimeSlot.minToTime(timeTemp += this.model.breakDuration || 0)];
+        temp.push(row);
+      }
+    }
+
+    return temp;
+  }
+
+  getBreakOptions() {
+    let result = [];
+    let temp = this.model._startAt;
+
+    for (let index = 0; index < this.model.nSlotDay; index++) {
+      result.push({
+        id: index,
+        text: this.timeSlotClass.minToTime(temp += this.model.slotDuration)
+      });
+
+    }
+    return result;
+  }
 }
