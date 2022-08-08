@@ -18,6 +18,7 @@ export class ClassComponent implements OnInit {
   classes = Class.data;
   workingIndex: number;
   timeSlots: Array<TimeSlot> = TimeSlot.data;
+  xclassSelectValue: number;
 
   constructor() {}
 
@@ -142,11 +143,11 @@ export class ClassComponent implements OnInit {
     $('#subjectFormModal').modal('show');
   }
 
-  initCopySubjects(index: number): void {
+  initCopySubjects(): void {
     $('#subjectsCopyModal').modal('show');
   }
 
-  copySubjects(index: number): void {
+  copySubjects(index: number): void {    
     $('#subjectsCopyModal').modal('hide');
     this.classes[this.workingIndex].subjects = [];
     this.classes[index].subjects.forEach(obj => {

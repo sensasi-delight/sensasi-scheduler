@@ -49,8 +49,8 @@ export class TimeSlot {
   }
 
   static toLocalStorage() {
-    let local = JSON.parse(localStorage.getItem(environment.localStorageItemName));
-    local['timeSlots'] = TimeSlot.data;
+    let local = JSON.parse(localStorage.getItem(environment.localStorageItemName)) || {};
+    local.timeSlots = TimeSlot.data;
     localStorage.setItem(environment.localStorageItemName, JSON.stringify(local));
   }
 

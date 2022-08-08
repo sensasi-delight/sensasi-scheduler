@@ -11,8 +11,8 @@
       <div class="card-header py-3">
 
         <!-- <label for="">Data</label> -->
-        <button class="btn btn-success btn-circle btn-sm" (click)="initCreate()"
-          data-toggle="tooltip" data-placement="top" title="Tambah kelas">
+        <button class="btn btn-success btn-circle btn-sm" (click)="initCreate()" data-toggle="tooltip"
+          data-placement="top" title="Tambah kelas">
           <i class="fa fa-plus"></i>
         </button>
       </div>
@@ -31,7 +31,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let class of classes; let i = index" >
+            <tr *ngFor="let class of classes; let i = index">
               <td>{{ class.id }}</td>
               <td>{{ class.name }}</td>
               <td>{{ class.grade }}</td>
@@ -90,7 +90,8 @@
         </button>
       </div>
       <div class="card-body">
-        <p class="text-center" *ngIf="model.subjects && model.subjects.length === 0">Silahkan masukkan data mata kuliah</p>
+        <p class="text-center" *ngIf="model.subjects && model.subjects.length === 0">Silahkan masukkan data mata kuliah
+        </p>
         <table class="table table-default table-sm" *ngIf="model.subjects && model.subjects.length !== 0">
           <thead>
             <tr style="border-top: hidden;">
@@ -202,7 +203,8 @@
 
           <div class="form-group">
             <input name="studyProgram" class="form-control" placeholder="Program Studi" required #studyProgram="ngModel"
-              [(ngModel)]="model.studyProgram" [ngClass]="{ 'is-invalid': classForm.submitted && studyProgram.invalid }" />
+              [(ngModel)]="model.studyProgram"
+              [ngClass]="{ 'is-invalid': classForm.submitted && studyProgram.invalid }" />
 
             <div *ngIf="classForm.submitted && studyProgram.invalid" class="invalid-feedback">
               <div *ngIf="studyProgram.errors['required']">
@@ -211,18 +213,18 @@
             </div>
           </div>
 
-          <select name="timeSlotId" class="form-control" required
-            #timeSlotId="ngModel" [(ngModel)]="model.timeSlotId" [ngClass]="{ 'is-invalid': classForm.submitted && timeSlotId.invalid }">
-              <option value="undefined" hidden>Slot Waktu</option>
-              <option value="null" hidden>Slot Waktu</option>
-              <option *ngFor="let timeSlot of timeSlots;">{{ timeSlot.id }}</option>
-            </select>
+          <select name="timeSlotId" class="form-control" required #timeSlotId="ngModel" [(ngModel)]="model.timeSlotId"
+            [ngClass]="{ 'is-invalid': classForm.submitted && timeSlotId.invalid }">
+            <option value="undefined" hidden>Slot Waktu</option>
+            <option value="null" hidden>Slot Waktu</option>
+            <option *ngFor="let timeSlot of timeSlots;">{{ timeSlot.id }}</option>
+          </select>
 
-            <div *ngIf="classForm.submitted && timeSlotId.invalid" class="invalid-feedback">
-              <div *ngIf="timeSlotId.errors['required']">
-                mohon masukkan slot waktu kelas
-              </div>
+          <div *ngIf="classForm.submitted && timeSlotId.invalid" class="invalid-feedback">
+            <div *ngIf="timeSlotId.errors['required']">
+              mohon masukkan slot waktu kelas
             </div>
+          </div>
         </div>
 
         <div class="modal-footer">
@@ -259,7 +261,8 @@
 
 
 <!-- Subject Form Modal-->
-<div class="modal fade" id="subjectFormModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+<div class="modal fade" id="subjectFormModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle"
+  aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <form #subjectForm="ngForm" (ngSubmit)="subjectForm.form.valid && storeSubject(subjectForm)">
@@ -284,8 +287,8 @@
           </div>
 
           <div class="form-group">
-            <select name="type" class="form-control" required
-            #type="ngModel" [(ngModel)]="subjectModel.type" [ngClass]="{ 'is-invalid': subjectForm.submitted && type.invalid }">
+            <select name="type" class="form-control" required #type="ngModel" [(ngModel)]="subjectModel.type"
+              [ngClass]="{ 'is-invalid': subjectForm.submitted && type.invalid }">
               <option value="undefined" hidden disabled>Jenis</option>
               <option>Teori</option>
               <option>Praktik</option>
@@ -299,8 +302,9 @@
           </div>
 
           <div class="form-group">
-            <input name="duration" type="number" min="1" class="form-control" placeholder="Durasi" required #duration="ngModel"
-              [(ngModel)]="subjectModel.duration" [ngClass]="{ 'is-invalid': subjectForm.submitted && duration.invalid }" />
+            <input name="duration" type="number" min="1" class="form-control" placeholder="Durasi" required
+              #duration="ngModel" [(ngModel)]="subjectModel.duration"
+              [ngClass]="{ 'is-invalid': subjectForm.submitted && duration.invalid }" />
 
             <div *ngIf="subjectForm.submitted && duration.invalid" class="invalid-feedback">
               <div *ngIf="duration.errors['required']">
@@ -310,12 +314,8 @@
           </div>
 
           <div class="form-group">
-            <ng-select2 name="lecturer1Id" required
-              [options]="{theme: 'bootstrap4'}"
-              [data]="select2LecturerOptions"
-              [(ngModel)]="subjectModel.lecturer1Id"
-              #lecturer1Id="ngModel"
-              [placeholder]="'Pengampu 1'"
+            <ng-select2 name="lecturer1Id" required [options]="{theme: 'bootstrap4'}" [data]="select2LecturerOptions"
+              [(ngModel)]="subjectModel.lecturer1Id" #lecturer1Id="ngModel" [placeholder]="'Pengampu 1'"
               [ngClass]="{ 'is-invalid': subjectForm.submitted && lecturer1Id.invalid }">
             </ng-select2>
 
@@ -327,14 +327,9 @@
           </div>
 
           <div class="form-group">
-            <ng-select2 name="lecturer2Id"
-              [options]="{theme: 'bootstrap4'}"
-              [allowClear]="true"
-              [data]="select2LecturerOptions"
-              [(ngModel)]="subjectModel.lecturer2Id"
-              #lecturer2Id="ngModel"
-              [placeholder]="'Pengampu 2'"
-              [ngClass]="{ 'is-invalid': subjectForm.submitted && lecturer2Id.invalid }">
+            <ng-select2 name="lecturer2Id" [options]="{theme: 'bootstrap4'}" [allowClear]="true"
+              [data]="select2LecturerOptions" [(ngModel)]="subjectModel.lecturer2Id" #lecturer2Id="ngModel"
+              [placeholder]="'Pengampu 2'" [ngClass]="{ 'is-invalid': subjectForm.submitted && lecturer2Id.invalid }">
             </ng-select2>
           </div>
         </div>
@@ -376,20 +371,19 @@
       <div class="modal-body text-center">
         <small>Salin mata kuliah & pengampu <strong>{{ model.id }}</strong> dari kelas:</small>
         <div class="form-group">
-          <ng-select2 required #classCopyIndex
-            [options]="{theme: 'bootstrap4'}"
-            [data]="select2ClassOptions"
-            [placeholder]="'Pilih kelas'">
+          <ng-select2 required #xclassSelect="ngModel"  [(ngModel)]="xclassSelectValue" [options]="{theme: 'bootstrap4'}"
+            [data]="select2ClassOptions" [placeholder]="'Pilih kelas'">
           </ng-select2>
         </div>
 
         <!-- <h4><strong>{{ model.id }}</strong></h4> -->
-        <small class="text-danger mt-4">*menyalin data akan menimpa data <strong>{{ model.id }}</strong> yang telah ada</small>
+        <small class="text-danger mt-4">*menyalin data akan menimpa data <strong>{{ model.id }}</strong> yang telah
+          ada</small>
       </div>
 
       <div class="modal-footer">
         <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Batal</button>
-        <button class="btn btn-primary btn-sm" type="button" (click)="copySubjects(classCopyIndex.element[0].value)">Salin</button>
+        <button class="btn btn-primary btn-sm" type="button" (click)="copySubjects(xclassSelectValue)">Salin</button>
       </div>
     </div>
   </div>

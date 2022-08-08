@@ -38,8 +38,8 @@ export class Room {
   }
 
   static toLocalStorage() {
-    let local = JSON.parse(localStorage.getItem(environment.localStorageItemName));
-    local['rooms'] = Room.data;
+    let local = JSON.parse(localStorage.getItem(environment.localStorageItemName)) || {};
+    local.rooms = Room.data;
     localStorage.setItem(environment.localStorageItemName, JSON.stringify(local));
   }
 

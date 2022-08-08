@@ -46,8 +46,8 @@ export class Lecturer {
   }
 
   static toLocalStorage() {
-    let local = JSON.parse(localStorage.getItem(environment.localStorageItemName));
-    local['lecturers'] = Lecturer.data;
+    let local = JSON.parse(localStorage.getItem(environment.localStorageItemName)) || {};
+    local.lecturers = Lecturer.data;
     localStorage.setItem(environment.localStorageItemName, JSON.stringify(local));
   }
 
