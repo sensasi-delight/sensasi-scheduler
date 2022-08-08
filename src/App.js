@@ -1,25 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Route, Routes } from 'react-router-dom';
+
+import createTheme from '@mui/material/styles/createTheme';
+import ThemeProvider from '@mui/material/styles/ThemeProvider';
+
+import Container from '@mui/material/Container';
+import Home from './pages/home';
+import Detail from './pages/detail';
+
+const THEME = createTheme({})
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={THEME}>
+      <Container className="App" maxWidth="md">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="detail/:scheduleId" element={<Detail />} />
+        </Routes>
+
+      </Container>
+    </ThemeProvider>
   );
 }
 
